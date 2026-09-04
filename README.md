@@ -30,7 +30,7 @@ it should fail fast with the same clear banner instead of a bare stack trace.
 ## Install
 
 ```bash
-npm install nestjs-resilience
+npm install @idevconn/nestjs-resilience
 ```
 
 `@nestjs/common` and `@nestjs/microservices` are peer dependencies (v10 or
@@ -45,7 +45,7 @@ import {
   buildStrategyWithFallback,
   signHmac,
   verifyHmac,
-} from 'nestjs-resilience';
+} from '@idevconn/nestjs-resilience';
 
 // main.ts
 await bootstrapMicroservice(

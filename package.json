@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-resilience",
+  "name": "@idevconn/nestjs-resilience",
   "version": "0.1.0",
   "description": "Never-crash-on-missing-config helpers for NestJS microservices: boxed env banners, strategy-with-fallback, transport resolution (tcp/redis/nats/mqtt/rmq/kafka), retrying microservice bootstrap, and HMAC signing.",
   "license": "MIT",
@@ -17,6 +17,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iDEVconn/nestjs-resilience.git"
