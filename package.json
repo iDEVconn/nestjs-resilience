@@ -1,6 +1,6 @@
 {
   "name": "@idevconn/nestjs-resilience",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Never-crash-on-missing-config helpers for NestJS microservices: boxed env banners, strategy-with-fallback, transport resolution (tcp/redis/nats/mqtt/rmq/kafka), retrying microservice bootstrap, and HMAC signing.",
   "license": "MIT",
   "type": "module",
