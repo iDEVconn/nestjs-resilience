@@ -27,6 +27,18 @@ it should fail fast with the same clear banner instead of a bare stack trace.
   reject the *initial* connect regardless of the transport's own retry
   options.
 
+Resilience primitives for actual RPC calls (gateway→MS `ClientProxy.send()`,
+outbound HTTP to SaaS) — framework-agnostic, no `@nestjs/*` import:
+
+- **`timeout`** — `withTimeout`: races a call against a `ms` timer, rejects
+  with `TimeoutError` (carrying `timeoutMs`) if it fires first.
+- **`retry`** — `withRetry`: exponential backoff with ±20% jitter, an
+  `isRetryable` predicate to skip non-transient errors, rejects with the
+  last real error on exhaustion (not a generic wrapper).
+- **`circuit-breaker`** — `CircuitBreaker` / `CircuitBreakerRegistry`:
+  closed/open/half-open state machine per key (one instance per downstream
+  service/provider), `CircuitOpenError` on fail-fast.
+
 ## Install
 
 ```bash

@@ -5,3 +5,4 @@ export * from './strategy-fallback';
 export * from './bootstrap-microservice';
 export * from './timeout';
 export * from './retry';
+export * from './circuit-breaker';
