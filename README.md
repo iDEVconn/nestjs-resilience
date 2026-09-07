@@ -41,6 +41,10 @@ outbound HTTP to SaaS) — framework-agnostic, no `@nestjs/*` import:
 - **`bulkhead`** — `Bulkhead`: caps concurrent calls at `maxConcurrent`,
   queues the rest (bounded by `maxQueue`), `BulkheadRejectedError` when the
   queue overflows.
+- **`resilience`** — `composeResilience`: wires the four primitives together
+  in a fixed order — `bulkhead → circuit breaker → retry → timeout`, timeout
+  applied per retry attempt, not to the whole retry series. See the
+  doc-comment on `composeResilience` for why that order matters.
 
 ## Install
 
