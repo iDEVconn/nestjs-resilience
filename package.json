@@ -1,7 +1,7 @@
 {
   "name": "@idevconn/nestjs-resilience",
   "version": "0.2.1",
-  "description": "Never-crash-on-missing-config helpers for NestJS microservices: boxed env banners, strategy-with-fallback, transport resolution (tcp/redis/nats/mqtt/rmq/kafka), retrying microservice bootstrap, and HMAC signing.",
+  "description": "Never-crash-on-missing-config helpers for NestJS microservices (env banners, strategy-with-fallback, transport resolution, retrying bootstrap, HMAC signing) plus framework-agnostic resilience primitives — timeout, retry with backoff, circuit breaker, bulkhead — for actual RPC calls, with a thin NestJS ClientProxy wrapper.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -39,13 +39,15 @@
   },
   "peerDependencies": {
     "@nestjs/common": "^10.0.0 || ^11.0.0",
-    "@nestjs/microservices": "^10.0.0 || ^11.0.0"
+    "@nestjs/microservices": "^10.0.0 || ^11.0.0",
+    "rxjs": "^7.1.0"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.11",
     "@nestjs/common": "^11.2.1",
     "@nestjs/microservices": "^11.2.1",
     "@types/node": "^22.10.5",
+    "rxjs": "^7.8.2",
     "tsup": "^8.3.5",
     "typescript": "^5.7.3",
     "vitest": "^4.1.11"

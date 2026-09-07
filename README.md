@@ -1,12 +1,20 @@
 # nestjs-resilience
 
-Never-crash-on-missing-config helpers for NestJS microservices.
+Never-crash-on-missing-config helpers for NestJS microservices, plus
+framework-agnostic resilience primitives (timeout/retry/circuit-breaker/
+bulkhead) for the RPC calls between them.
 
-Extracted from a project-wide pattern: a microservice with a strategy
-provider (auth, db, mail, storage, ...) selected at runtime by env vars
-should never crash the whole app because a `.env` is incomplete — in dev it
-should log a loud, boxed warning and fall back to an in-memory fake; in prod
-it should fail fast with the same clear banner instead of a bare stack trace.
+The config-boot side: extracted from a project-wide pattern where a
+microservice with a strategy provider (auth, db, mail, storage, ...) selected
+at runtime by env vars should never crash the whole app because a `.env` is
+incomplete — in dev it should log a loud, boxed warning and fall back to an
+in-memory fake; in prod it should fail fast with the same clear banner
+instead of a bare stack trace.
+
+The RPC-resilience side: bootstrap-time retry doesn't help once a service is
+up and a gateway is calling it — those `ClientProxy.send()` calls (or
+outbound HTTP to a SaaS) need their own timeout, retry, circuit breaker and
+concurrency cap, composable via `composeResilience` / `resilientSend`.
 
 ## What's in here
 
@@ -45,6 +53,11 @@ outbound HTTP to SaaS) — framework-agnostic, no `@nestjs/*` import:
   in a fixed order — `bulkhead → circuit breaker → retry → timeout`, timeout
   applied per retry attempt, not to the whole retry series. See the
   doc-comment on `composeResilience` for why that order matters.
+- **`nest-resilient-client`** — `resilientSend`: wraps
+  `ClientProxy.send(pattern, data)` with `composeResilience`, closing the
+  gap where gateway→microservice RPC calls had no timeout/retry/circuit
+  breaker of their own. The only file in this package that imports
+  `@nestjs/microservices`/`rxjs`.
 
 ## Install
 
@@ -52,8 +65,8 @@ outbound HTTP to SaaS) — framework-agnostic, no `@nestjs/*` import:
 npm install @idevconn/nestjs-resilience
 ```
 
-`@nestjs/common` and `@nestjs/microservices` are peer dependencies (v10 or
-v11).
+`@nestjs/common`, `@nestjs/microservices` (v10 or v11) and `rxjs` are peer
+dependencies.
 
 ## Usage
 
@@ -82,6 +95,21 @@ const authStrategy = buildStrategyWithFallback({
   envPath: 'apps/microservices/auth/.env',
   build: () => new SupabaseAuthStrategy(),
   fake: () => new FakeAuthStrategy(),
+});
+```
+
+Resilient gateway→microservice RPC call, one `CircuitBreaker` shared per
+downstream service via the registry:
+
+```ts
+import { CircuitBreakerRegistry, resilientSend } from '@idevconn/nestjs-resilience';
+
+const breakers = new CircuitBreakerRegistry({ failureThreshold: 5, resetTimeoutMs: 30_000 });
+
+const user = await resilientSend<User>(authClient, 'get_user', { id }, {
+  timeout: { ms: 2000 },
+  retry: { maxAttempts: 3, baseDelayMs: 200, isRetryable: (err) => !(err instanceof BadRequestError) },
+  circuitBreaker: breakers.get('auth'),
 });
 ```
 

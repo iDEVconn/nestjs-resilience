@@ -8,3 +8,4 @@ export * from './retry';
 export * from './circuit-breaker';
 export * from './bulkhead';
 export * from './resilience';
+export * from './nest-resilient-client';
