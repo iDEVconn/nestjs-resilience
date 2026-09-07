@@ -38,6 +38,9 @@ outbound HTTP to SaaS) — framework-agnostic, no `@nestjs/*` import:
 - **`circuit-breaker`** — `CircuitBreaker` / `CircuitBreakerRegistry`:
   closed/open/half-open state machine per key (one instance per downstream
   service/provider), `CircuitOpenError` on fail-fast.
+- **`bulkhead`** — `Bulkhead`: caps concurrent calls at `maxConcurrent`,
+  queues the rest (bounded by `maxQueue`), `BulkheadRejectedError` when the
+  queue overflows.
 
 ## Install
 
