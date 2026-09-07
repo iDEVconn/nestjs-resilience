@@ -1,6 +1,6 @@
 {
   "name": "@idevconn/nestjs-resilience",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Never-crash-on-missing-config helpers for NestJS microservices (env banners, strategy-with-fallback, transport resolution, retrying bootstrap, HMAC signing) plus framework-agnostic resilience primitives — timeout, retry with backoff, circuit breaker, bulkhead — for actual RPC calls, with a thin NestJS ClientProxy wrapper.",
   "license": "MIT",
   "type": "module",
